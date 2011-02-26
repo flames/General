@@ -1,4 +1,4 @@
-package com.nijikokun.bukkit.General;
+package com.nijikokun.cjcfork.bukkit.General;
 
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.Material;

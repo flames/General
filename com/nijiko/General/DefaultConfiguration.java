@@ -1,4 +1,4 @@
-package com.nijiko.General;
+package com.nijiko.cjcfork.General;
 
 /**
  * Basic configuration loader.

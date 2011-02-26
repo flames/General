@@ -1,4 +1,4 @@
-package com.nijikokun.bukkit.General;
+package com.nijikokun.cjcfork.bukkit.General;
 
 
 import java.io.BufferedReader;

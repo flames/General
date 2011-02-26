@@ -1,4 +1,4 @@
-package com.nijiko.General;
+package com.nijiko.cjcfork.General;
 
 import org.bukkit.util.config.Configuration;
 
