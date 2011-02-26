@@ -10,6 +10,8 @@ import java.util.logging.Logger;
 //import org.bukkit.Server;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event;
+import org.bukkit.event.server.PluginEvent;
+import org.bukkit.event.server.ServerListener;
 //import org.bukkit.plugin.PluginDescriptionFile;
 //import org.bukkit.plugin.PluginLoader;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -17,7 +19,10 @@ import com.nijikokun.bukkit.Permissions.Permissions;
 import com.nijiko.cjcfork.General.ConfigurationHandler;
 import com.nijiko.cjcfork.General.DefaultConfiguration;
 
+//import com.nijiko.iConomy.configuration.PropertyHandler;
 import org.bukkit.plugin.Plugin;
+
+
 
 /**
  * General 2.x Copyright (C) 2011 Nijikokun <nijikokun@gmail.com>
@@ -56,7 +61,7 @@ public class General extends JavaPlugin {
 	/**
 	 * Things the controller needs to watch permissions for
 	 */
-	// private final String[] watching = { "manage-plugins", "teleport",
+	//private final String[] watching = { "manage-plugins", "teleport",
 	// "spawn", "set-spawn", "set-time", "give-items", "see-player-info" };
 
 	/**
@@ -148,6 +153,9 @@ public class General extends JavaPlugin {
 	private void registerEvents() {
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_COMMAND, l, Priority.Normal, this);
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_JOIN, l, Priority.Normal, this);
+		
+		//iConomy 3.0
+        this.getServer().getPluginManager().registerEvent(Event.Type.PLUGIN_ENABLE, Listener, Priority.Monitor, this);
 	}
 
 	public void setupCommands() {
@@ -253,4 +261,24 @@ public class General extends JavaPlugin {
 		} catch (IOException ex) {
 		}
 	}
+	
+	
+	
+	
+    public static com.nijikokun.bukkit.iConomy.iConomy iConomy;
+    private Listener Listener = new Listener();
+
+    private class Listener extends ServerListener {
+
+        public Listener() { }
+
+        @Override
+        public void onPluginEnabled(PluginEvent event) {
+            if(event.getPlugin().getDescription().getName().equals("iConomy")) {
+                General.iConomy = (com.nijikokun.bukkit.iConomy.iConomy)event.getPlugin();
+                log.info("[MyPlugin] Attached to iConomy.");
+            }
+        }
+    }
+
 }

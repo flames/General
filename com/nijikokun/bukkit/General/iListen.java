@@ -19,6 +19,9 @@ import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import com.nijikokun.bukkit.iConomy.iConomy;
+//import org.bukkit.plugin.Plugin;
+
 //import com.nijikokun.bukkit.iConomy.iConomy;
 
 /**
@@ -346,9 +349,7 @@ public class iListen extends PlayerListener {
 			if (!General.Permissions.getHandler().permission(player, "general.spawn.set")) {
 				return;
 			}
-			player.getWorld().getSpawnLocation().setX(player.getLocation().getX());
-			player.getWorld().getSpawnLocation().setY(player.getLocation().getY());
-			player.getWorld().getSpawnLocation().setZ(player.getLocation().getZ());
+			server.q.a((int) Math.ceil(player.getLocation().getX()), (int) Math.ceil(player.getLocation().getY()),(int) Math.ceil(player.getLocation().getZ()));
 			// server.m = (int)Math.ceil(player.getLocation().getX());
 			// server.o = (int)Math.ceil(player.getLocation().getZ());
 
@@ -381,7 +382,11 @@ public class iListen extends PlayerListener {
 
 			String location = (int) player.getLocation().getX() + "x, " + (int) player.getLocation().getY() + "y, " + (int) player.getLocation().getZ() + "z";
 			String ip = player.getAddress().getAddress().getHostAddress();
-			String balance = "";
+			String balance = Double.toString(iConomy.getBank().getAccount(player.getName()).getBalance());
+			//Plugin test = plugin.getServer().getPluginManager().getPlugin("iConomy");
+			
+			
+			
 			// Plugin test =
 			// plugin.getServer().getPluginManager().getPlugin("iConomy");
 
