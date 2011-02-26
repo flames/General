@@ -27,46 +27,46 @@ import org.bukkit.util.config.Configuration;
  */
 
 /**
- * iControl.java
- * Permission handler
- *
+ * iControl.java Permission handler
+ * 
  * @author Nijiko
  */
 public class iControl {
 
-    private Map<String, Set<String>> UserPermissions;
-    private Configuration config;
+	private Map<String, Set<String>> UserPermissions;
+	private Configuration config;
 
-    public iControl(Configuration config) {
-	this.config = config;
-    }
+	public iControl(Configuration config) {
+		this.config = config;
+	}
 
-    public void load() {
-	List<String> userKeys = this.config.getKeys("permissions.users");
-	Set Permissions = new HashSet();
-	List permissions;
+	public void load() {
 
-	if (userKeys != null) {
-	    for (String key : userKeys) {
-		Permissions = new HashSet();
-		permissions = this.config.getStringList("users." + key + ".permissions", null);
+		List<String> userKeys = this.config.getKeys("permissions.users");
+		Set<String> Permissions;// = new HashSet<String>();
+		List<String> permissions;
 
-		if (permissions.size() > 0) {
-		    Permissions.addAll(permissions);
+		if (userKeys != null) {
+			for (String key : userKeys) {
+				Permissions = new HashSet<String>();
+				permissions = this.config.getStringList("users." + key + ".permissions", null);
+
+				if (permissions.size() > 0) {
+					Permissions.addAll(permissions);
+				}
+
+				this.UserPermissions.put(key.toLowerCase(), Permissions);
+			}
+		}
+	}
+
+	public boolean permission(String controller, Player player) {
+		Set<String> Permissions = (Set<String>) this.UserPermissions.get(player.getName().toLowerCase());
+
+		if (Permissions == null) {
+			return false;
 		}
 
-		this.UserPermissions.put(key.toLowerCase(), Permissions);
-	    }
+		return Permissions.contains(controller);
 	}
-    }
-
-    public boolean permission(String controller, Player player) {
-	Set Permissions = (Set) this.UserPermissions.get(player.getName().toLowerCase());
-
-	if (Permissions == null) {
-	    return false;
-	}
-
-	return Permissions.contains(controller);
-    }
 }

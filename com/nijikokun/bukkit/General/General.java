@@ -7,11 +7,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
-import org.bukkit.Server;
+//import org.bukkit.Server;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event;
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.PluginLoader;
+//import org.bukkit.plugin.PluginDescriptionFile;
+//import org.bukkit.plugin.PluginLoader;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.nijikokun.bukkit.Permissions.Permissions;
 import com.nijiko.cjcfork.General.ConfigurationHandler;
@@ -46,7 +46,7 @@ public class General extends JavaPlugin {
 	 */
 	public static String name = "General";
 	public static String codename = "TheBeginningOfTheEnd";
-	public static String version = "2.1.0.1";
+	public static String version; // set in onEnable now >.<
 
 	/**
 	 * Listener for the plugin system.
@@ -56,7 +56,8 @@ public class General extends JavaPlugin {
 	/**
 	 * Things the controller needs to watch permissions for
 	 */
-	private final String[] watching = { "manage-plugins", "teleport", "spawn", "set-spawn", "set-time", "give-items", "see-player-info" };
+	// private final String[] watching = { "manage-plugins", "teleport",
+	// "spawn", "set-spawn", "set-time", "give-items", "see-player-info" };
 
 	/**
 	 * Miscellaneous object for various functions that don't belong anywhere
@@ -79,36 +80,39 @@ public class General extends JavaPlugin {
 	public static HashMap<String, String> items;
 	public static boolean health = true, coords = true, commands = true;
 
-//	public General(PluginLoader pluginLoader, Server instance, PluginDescriptionFile desc, File folder, File plugin, ClassLoader cLoader) {
-//		super(pluginLoader, instance, desc, folder, plugin, cLoader);
-//
-//		// Start Registration
-//		folder.mkdirs();
-//
-//		// Attempt
-//		if (!(new File(getDataFolder(), "config.yml").exists())) {
-//			DefaultConfiguration("config.yml");
-//		}
-//
-//		// Gogo
-//		this.config = new ConfigurationHandler(getConfiguration());
-//		getConfiguration().load();
-//		this.config.load();
-//
-//		// Register
-//		registerEvents();
-//
-//		log.info(Messaging.bracketize(name) + " version " + Messaging.bracketize(version) + " (" + codename + ") loaded");
-//	}
+	// public General(PluginLoader pluginLoader, Server instance,
+	// PluginDescriptionFile desc, File folder, File plugin, ClassLoader
+	// cLoader) {
+	// super(pluginLoader, instance, desc, folder, plugin, cLoader);
+	//
+	// // Start Registration
+	// folder.mkdirs();
+	//
+	// // Attempt
+	// if (!(new File(getDataFolder(), "config.yml").exists())) {
+	// DefaultConfiguration("config.yml");
+	// }
+	//
+	// // Gogo
+	// this.config = new ConfigurationHandler(getConfiguration());
+	// getConfiguration().load();
+	// this.config.load();
+	//
+	// // Register
+	// registerEvents();
+	//
+	// log.info(Messaging.bracketize(name) + " version " +
+	// Messaging.bracketize(version) + " (" + codename + ") loaded");
+	// }
 
 	public void onDisable() {
-		//log.info(Messaging.bracketize(name) + " version " + Messaging.bracketize(version) + " (" + codename + ") disabled");
+		// log.info(Messaging.bracketize(name) + " version " +
+		// Messaging.bracketize(version) + " (" + codename + ") disabled");
 	}
 
 	public void onEnable() {
-		
-		
-		
+		version = this.getDescription().getVersion();
+
 		this.getDataFolder().mkdirs();
 
 		// Attempt
@@ -125,11 +129,8 @@ public class General extends JavaPlugin {
 		registerEvents();
 
 		log.info(Messaging.bracketize(name) + " version " + Messaging.bracketize(version) + " (" + codename + ") loaded");
-		
-		
-		
-		
-		////////////////////////////////////////////
+
+		// //////////////////////////////////////////
 		Motd = new File(getDataFolder() + File.separator + "general.motd");
 		Items = new iProperty("items.db");
 
@@ -180,12 +181,18 @@ public class General extends JavaPlugin {
 		}
 	}
 
+	
+	
+	
+	//(one line of, didn't outright paste this time :P) new setupPermissions courtesy of Acru
+	//http://forums.bukkit.org/posts/79813/
 	public void setupPermissions() {
 		Plugin test = this.getServer().getPluginManager().getPlugin("Permissions");
 
-		if (this.Permissions == null) {
+		if (General.Permissions == null) {
 			if (test != null) {
-				this.Permissions = (Permissions) test;
+                this.getServer().getPluginManager().enablePlugin(test); // This line.
+				General.Permissions = (Permissions) test;
 			} else {
 				log.info(Messaging.bracketize(name) + " Permission system not enabled. Disabling plugin.");
 				this.getServer().getPluginManager().disablePlugin(this);
@@ -197,7 +204,7 @@ public class General extends JavaPlugin {
 	 * Setup Items
 	 */
 	public void setupItems() {
-		Map mappedItems = null;
+		Map<String, String> mappedItems = null;
 		items = new HashMap<String, String>();
 
 		try {

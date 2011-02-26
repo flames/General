@@ -13,7 +13,7 @@ import org.bukkit.World;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerListener;
-import org.bukkit.plugin.Plugin;
+//import org.bukkit.plugin.Plugin;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.Player;
@@ -95,15 +95,15 @@ public class iListen extends PlayerListener {
 		player.getWorld().setTime(time);
 	}
 
-	private void setRelativeTime(long time, Player player) {
-		long margin = (time - getTime(player)) % 24000;
-
-		if (margin < 0) {
-			margin += 24000;
-		}
-
-		player.getWorld().setTime(getTime(player) + margin);
-	}
+	// private void setRelativeTime(long time, Player player) {
+	// long margin = (time - getTime(player)) % 24000;
+	//
+	// if (margin < 0) {
+	// margin += 24000;
+	// }
+	//
+	// player.getWorld().setTime(getTime(player) + margin);
+	// }
 
 	protected boolean teleport(String who, String to) {
 		Player destination = Misc.playerMatch(to);
@@ -292,7 +292,8 @@ public class iListen extends PlayerListener {
 		String ip = player.getAddress().getAddress().getHostAddress();
 		String balance = "";
 
-		Plugin test = plugin.getServer().getPluginManager().getPlugin("iConomy");
+		// Plugin test =
+		// plugin.getServer().getPluginManager().getPlugin("iConomy");
 
 		// if(test != null) {
 		// iConomy iConomy = (iConomy)test;
@@ -342,7 +343,7 @@ public class iListen extends PlayerListener {
 		}
 
 		if ((!event.isCancelled()) && Misc.is(base, "/setspawn")) {
-			if (!General.Permissions.Security.permission(player, "general.spawn.set")) {
+			if (!General.Permissions.getHandler().permission(player, "general.spawn.set")) {
 				return;
 			}
 			player.getWorld().getSpawnLocation().setX(player.getLocation().getX());
@@ -355,7 +356,7 @@ public class iListen extends PlayerListener {
 		}
 
 		if (Misc.isEither(base, "/rlidb", "/reloaditems")) {
-			if (!General.Permissions.Security.permission(player, "general.reloaditems")) {
+			if (!General.Permissions.getHandler().permission(player, "general.reloaditems")) {
 				return;
 			}
 
@@ -364,7 +365,7 @@ public class iListen extends PlayerListener {
 		}
 
 		if (Misc.is(base, "/spawn")) {
-			if (!General.Permissions.Security.permission(player, "general.spawn")) {
+			if (!General.Permissions.getHandler().permission(player, "general.spawn")) {
 				return;
 			}
 
@@ -381,7 +382,8 @@ public class iListen extends PlayerListener {
 			String location = (int) player.getLocation().getX() + "x, " + (int) player.getLocation().getY() + "y, " + (int) player.getLocation().getZ() + "z";
 			String ip = player.getAddress().getAddress().getHostAddress();
 			String balance = "";
-			Plugin test = plugin.getServer().getPluginManager().getPlugin("iConomy");
+			// Plugin test =
+			// plugin.getServer().getPluginManager().getPlugin("iConomy");
 
 			// if(test != null) {
 			// iConomy iConomy = (iConomy)test;
@@ -395,7 +397,7 @@ public class iListen extends PlayerListener {
 		}
 
 		if (Misc.isEither(base, "/tp", "/teleport")) {
-			if (!General.Permissions.Security.permission(player, "general.teleport")) {
+			if (!General.Permissions.getHandler().permission(player, "general.teleport")) {
 				return;
 			}
 
@@ -434,7 +436,7 @@ public class iListen extends PlayerListener {
 		}
 
 		if (Misc.isEither(base, "/s", "/tphere")) {
-			if (!General.Permissions.Security.permission(player, "general.teleport.here")) {
+			if (!General.Permissions.getHandler().permission(player, "general.teleport.here")) {
 				return;
 			}
 
@@ -526,7 +528,7 @@ public class iListen extends PlayerListener {
 		}
 
 		if (Misc.isEither(base, "/i", "/give") || Misc.is(base, "/item")) {
-			if (!General.Permissions.Security.permission(player, "general.items")) {
+			if (!General.Permissions.getHandler().permission(player, "general.items")) {
 				return;
 			}
 
@@ -659,7 +661,7 @@ public class iListen extends PlayerListener {
 		}
 
 		if (Misc.is(base, "/time")) {
-			if (!General.Permissions.Security.permission(player, "general.time")) {
+			if (!General.Permissions.getHandler().permission(player, "general.time")) {
 				return;
 			}
 
@@ -728,7 +730,7 @@ public class iListen extends PlayerListener {
 
 		if (Misc.isEither(base, "/playerlist", "/online") || Misc.is(base, "/who")) {
 			if (split.length == 2) {
-				if (!General.Permissions.Security.permission(player, "general.player-info")) {
+				if (!General.Permissions.getHandler().permission(player, "general.player-info")) {
 					return;
 				}
 
