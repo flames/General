@@ -1,4 +1,4 @@
-package com.nijiko.cjcfork.General;
+package de.procrafter.flames.bukkit.general;
 
 /**
  * Basic configuration loader.

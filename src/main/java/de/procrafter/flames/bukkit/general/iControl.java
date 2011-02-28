@@ -1,4 +1,4 @@
-package com.nijikokun.cjcfork.bukkit.General;
+package de.procrafter.flames.bukkit.general;
 
 //import java.util.HashMap;
 import java.util.HashSet;

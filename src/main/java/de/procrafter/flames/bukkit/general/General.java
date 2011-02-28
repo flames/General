@@ -1,4 +1,4 @@
-package com.nijikokun.cjcfork.bukkit.General;
+package de.procrafter.flames.bukkit.general;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -15,10 +15,10 @@ import org.bukkit.plugin.Plugin;
 
 import com.nijikokun.bukkit.Permissions.Permissions;
 
-import com.nijiko.coelho.iConomy.iConomy;
+//import com.nijiko.coelho.iConomy.iConomy;
 
-import com.nijiko.cjcfork.General.ConfigurationHandler;
-import com.nijiko.cjcfork.General.DefaultConfiguration;
+import de.procrafter.flames.bukkit.general.ConfigurationHandler;
+import de.procrafter.flames.bukkit.general.DefaultConfiguration;
 
 /**
  * General 2.x Copyright (C) 2011 Nijikokun <nijikokun@gmail.com>
@@ -115,7 +115,7 @@ public class General extends JavaPlugin {
 		// Setup
 		setupCommands();
 		setupPermissions();
-		setupiConomy();
+		//setupiConomy();
 		setupItems();
 		l.setupCmds();
 	}
@@ -229,7 +229,7 @@ public class General extends JavaPlugin {
 	}
 	
 	
-    public static iConomy iConomy;
+    /*public static iConomy iConomy;
 	
 	public void setupiConomy() {
 		Plugin test = this.getServer().getPluginManager().getPlugin("iConomy");
@@ -239,5 +239,5 @@ public class General extends JavaPlugin {
 				General.iConomy = (iConomy) test;
 			}
 		}
-	}
+	}*/
 }

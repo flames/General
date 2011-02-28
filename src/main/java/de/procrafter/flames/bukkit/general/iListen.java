@@ -1,4 +1,4 @@
-package com.nijikokun.cjcfork.bukkit.General;
+package de.procrafter.flames.bukkit.general;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -22,8 +22,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
-import com.nijiko.coelho.iConomy.iConomy;
-import com.nijiko.coelho.iConomy.system.Account;
+//import com.nijiko.coelho.iConomy.iConomy;
+//import com.nijiko.coelho.iConomy.system.Account;
 
 /**
  * General 1.1 & Code from iConomy 2.x
@@ -362,7 +362,7 @@ public class iListen extends PlayerListener {
 		String ip = player.getAddress().getAddress().getHostAddress();
 		String balance = "";
 
-		Plugin test = plugin.getServer().getPluginManager().getPlugin("iConomy");
+		/*Plugin test = plugin.getServer().getPluginManager().getPlugin("iConomy");
 		if (test != null) {
 			Account pAct = iConomy.getBank().getAccount(player.getName());
 			if (pAct != null) {
@@ -386,7 +386,7 @@ public class iListen extends PlayerListener {
 			for (String line : motd) {
 				Messaging.send(player, Messaging.argument(line, new String[] { "+dname,+d", "+name,+n", "+location,+l", "+health,+h", "+ip", "+balance", "+online" }, new String[] { player.getDisplayName(), player.getName(), location, Misc.string(player.getHealth()), ip, balance, Misc.string(plugin.getServer().getOnlinePlayers().length) }));
 			}
-		}
+		}*/
 	}
 
 	/**
@@ -464,10 +464,10 @@ public class iListen extends PlayerListener {
 			String ip = player.getAddress().getAddress().getHostAddress();
 			String balance = "";
 
-			Plugin test = plugin.getServer().getPluginManager().getPlugin("iConomy");
+			/*Plugin test = plugin.getServer().getPluginManager().getPlugin("iConomy");
 			if (test != null) {
 				balance = iConomy.getBank().getAccount(player.getName()) + " " + iConomy.getBank().getCurrency();
-			}
+			}*/
 
 			for (String line : motd) {
 				Messaging.send(player, Messaging.argument(line, new String[] { "+dname,+d", "+name,+n", "+location,+l", "+health,+h", "+ip", "+balance", "+online" }, new String[] { player.getDisplayName(), player.getName(), location, Misc.string(player.getHealth()), ip, balance, Misc.string(plugin.getServer().getOnlinePlayers().length) }));

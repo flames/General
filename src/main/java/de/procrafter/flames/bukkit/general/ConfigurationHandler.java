@@ -1,4 +1,4 @@
-package com.nijiko.cjcfork.General;
+package de.procrafter.flames.bukkit.general;
 
 import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;

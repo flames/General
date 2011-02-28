@@ -1,0 +1,11 @@
+name: General
+main: de.procrafter.flames.bukkit.general.General
+version: 0.3
+description: >
+             General commands plugin.
+commands:
+  spawn:
+    description: Teleports you to the spawn point.
+    usage: |
+           /<command>
+           Example: /<command> - teleports you to the spawn point.
