@@ -11,8 +11,8 @@ import java.util.logging.Logger;
 //import org.bukkit.Server;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event;
-import org.bukkit.event.server.PluginEvent;
-import org.bukkit.event.server.ServerListener;
+//import org.bukkit.event.server.PluginEvent;
+//import org.bukkit.event.server.ServerListener;
 //import org.bukkit.plugin.PluginDescriptionFile;
 //import org.bukkit.plugin.PluginLoader;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -22,7 +22,7 @@ import com.nijiko.cjcfork.General.DefaultConfiguration;
 
 //import com.nijiko.iConomy.configuration.PropertyHandler;
 import org.bukkit.plugin.Plugin;
-
+import com.nijiko.coelho.iConomy.iConomy;
 
 
 //import org.bukkit.command.Command;
@@ -66,8 +66,7 @@ public class General extends JavaPlugin {
 	/**
 	 * Things the controller needs to watch permissions for
 	 */
-	//private final String[] watching = { "manage-plugins", "teleport",
-	// "spawn", "set-spawn", "set-time", "give-items", "see-player-info" };
+	//private final String[] watching = { "manage-plugins", "teleport", "spawn", "set-spawn", "set-time", "give-items", "see-player-info" };
 
 	/**
 	 * Miscellaneous object for various functions that don't belong anywhere
@@ -153,6 +152,7 @@ public class General extends JavaPlugin {
 		// Setup
 		setupCommands();
 		setupPermissions();
+		setupiConomy();
 		setupItems();
 		l.setupCmds();
 	}
@@ -162,7 +162,7 @@ public class General extends JavaPlugin {
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_JOIN, l, Priority.Normal, this);
 		
 		//iConomy 3.0
-        this.getServer().getPluginManager().registerEvent(Event.Type.PLUGIN_ENABLE, Listener, Priority.Monitor, this);
+    //    this.getServer().getPluginManager().registerEvent(Event.Type.PLUGIN_ENABLE, Listener, Priority.Monitor, this);
 	}
 
 	public void setupCommands() {
@@ -271,22 +271,34 @@ public class General extends JavaPlugin {
 	}
 	
 	
+    public static iConomy iConomy;
+	
+	public void setupiConomy() {
+		Plugin test = this.getServer().getPluginManager().getPlugin("iConomy");
+		if (General.iConomy == null) {
+			if (test != null) {
+                this.getServer().getPluginManager().enablePlugin(test); // This line.
+				General.iConomy = (iConomy) test;
+			}
+		}
+	}
 	
 	
-    public static com.nijikokun.bukkit.iConomy.iConomy iConomy;
-    private Listener Listener = new Listener();
 
-    private class Listener extends ServerListener {
-
-        public Listener() { }
-
-        @Override
-        public void onPluginEnabled(PluginEvent event) {
-            if(event.getPlugin().getDescription().getName().equals("iConomy")) {
-                General.iConomy = (com.nijikokun.bukkit.iConomy.iConomy)event.getPlugin();
-                log.info("[MyPlugin] Attached to iConomy.");
-            }
-        }
-    }
+//	private Listener Listener = new Listener();
+//
+//	private class Listener extends ServerListener {
+//
+//		public Listener() {
+//		}
+//
+//		@Override
+//		public void onPluginEnabled(PluginEvent event) {
+//			if (event.getPlugin().getDescription().getName().equals("iConomy")) {
+//				General.iConomy = (iConomy) event.getPlugin();
+//				log.info("[General] Attached to iConomy.");
+//			}
+//		}
+//	}
 
 }

@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.logging.Logger;
 import net.minecraft.server.WorldServer;
 import org.bukkit.World;
+//import org.bukkit.event.Event;
+import org.bukkit.event.Event.Type;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerListener;
@@ -22,9 +24,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
-import com.nijikokun.bukkit.iConomy.iConomy;
+import com.nijiko.coelho.iConomy.iConomy;
+import com.nijiko.coelho.iConomy.system.Account;
 //import org.bukkit.plugin.Plugin;
-
+//import org.bukkit.scheduler.BukkitScheduler;
 //import com.nijikokun.bukkit.iConomy.iConomy;
 
 /**
@@ -67,88 +70,69 @@ public class iListen extends PlayerListener {
 	public static General plugin;
 	public WorldServer server;
 
-	//all commands checked for by general.
-	private String[] cmdArray = {"afk","away","compass","getpos","ghelp","give","help","i","item","motd","msg","online","playerlist","reloaditems","rlidb","s","setspawn","spawn","teleport","tell","time","tp","tphere","who"};
-	
-//	0	afk
-//	1	away
-//	2	compass
-//	3	getpos
-//	4	ghelp
-//	5	give
-//	6	help
-//	7	i
-//	8	item
-//	9	motd
-//	10	msg
-//	11	online
-//	12	playerlist
-//	13	reloaditems
-//	14	rlidb
-//	15	s
-//	16	setspawn
-//	17	spawn
-//	18	teleport
-//	19	tell
-//	20	time
-//	21	tp
-//	22	tphere
-//	23	who
+	// all commands checked for by general.
+	private String[] cmdArray = { "afk", "away", "compass", "getpos", "ghelp", "give", "help", "i", "item", "motd", "msg", "online", "playerlist", "reloaditems", "rlidb", "s", "setspawn", "spawn", "teleport", "tell", "time", "tp", "tphere", "who" };
 
-	
+	// 0 afk
+	// 1 away
+	// 2 compass
+	// 3 getpos
+	// 4 ghelp
+	// 5 give
+	// 6 help
+	// 7 i
+	// 8 item
+	// 9 motd
+	// 10 msg
+	// 11 online
+	// 12 playerlist
+	// 13 reloaditems
+	// 14 rlidb
+	// 15 s
+	// 16 setspawn
+	// 17 spawn
+	// 18 teleport
+	// 19 tell
+	// 20 time
+	// 21 tp
+	// 22 tphere
+	// 23 who
 
 	public static HashMap<Integer, String> cmds = new HashMap<Integer, String>();
-	
-	
-	
-	
+
 	public iListen(General instance) {
 		plugin = instance;
 	}
-	
-	
-	
-	
+
 	public void setupCmds() {
-		//input commands into hash table
+		// input commands into hash table
 		for (String s : cmdArray) {
 			cmds.put(s.hashCode(), s);
 		}
 
 		Plugin[] pArray = plugin.getServer().getPluginManager().getPlugins();
 		for (Plugin p : pArray) {
-			if (p != null && p != this){
-                plugin.getServer().getPluginManager().enablePlugin(p);
-                if (p.getDescription().getCommands() != null) {
-                	List<Command> cList = PluginCommandYamlParser.parse(p);
-                	for (Command c : cList) {
-                		if (cmds.containsKey(c.getName().hashCode())) {
-                			if (cmds.get(c.getName().hashCode()).equals(c.getName())) {
-                				System.out.println("General is giving " + c.getName() + " to " + p.getDescription().getName());
-                				cmds.remove(c.getName().hashCode());
-                			}
-                			//compare command to hashtable with commands General uses...
-                			//command exists in general. Need to....
-                		}
-                		//System.out.println(c.getName());
-                	}
-                	//System.out.println(p.getDescription().getCommands().toString());
-                }
+			if (p != null && p != this) {
+				plugin.getServer().getPluginManager().enablePlugin(p);
+				if (p.getDescription().getCommands() != null) {
+					List<Command> cList = PluginCommandYamlParser.parse(p);
+					for (Command c : cList) {
+						if (cmds.containsKey(c.getName().hashCode())) {
+							if (cmds.get(c.getName().hashCode()).equals(c.getName())) {
+								System.out.println("General is giving " + c.getName() + " to " + p.getDescription().getName());
+								cmds.remove(c.getName().hashCode());
+							}
+							// compare command to hashtable with commands
+							// General uses...
+							// command exists in general. Need to....
+						}
+						// System.out.println(c.getName());
+					}
+					// System.out.println(p.getDescription().getCommands().toString());
+				}
 			}
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
 
 	private Location spawn(Player player) {
 		// server.
@@ -363,7 +347,7 @@ public class iListen extends PlayerListener {
 			// General.log.info("Help command registry does not contain "+command_line+" to remove!");
 		}
 	}
-	
+
 	private boolean doCmd(int i) {
 		if (cmds.containsKey(cmdArray[i].hashCode())) {
 			return true;
@@ -373,12 +357,13 @@ public class iListen extends PlayerListener {
 
 	@Override
 	public void onPlayerJoin(PlayerEvent event) {
-		
-		if (doCmd(9)) {
+
+		if (!doCmd(9)) {
 			return;
 		}
-		
+
 		Player player = event.getPlayer();
+		final Player pp = player;
 		String[] motd = readMotd();
 
 		if (motd == null || motd.length < 1) {
@@ -389,17 +374,32 @@ public class iListen extends PlayerListener {
 		String ip = player.getAddress().getAddress().getHostAddress();
 		String balance = "";
 
-		// Plugin test =
-		// plugin.getServer().getPluginManager().getPlugin("iConomy");
-
-		// if(test != null) {
-		// iConomy iConomy = (iConomy)test;
-		// balance = iConomy.db.get_balance(player.getName()) + " " +
-		// iConomy.currency;
-		// }
-
-		for (String line : motd) {
-			Messaging.send(player, Messaging.argument(line, new String[] { "+dname,+d", "+name,+n", "+location,+l", "+health,+h", "+ip", "+balance", "+online" }, new String[] { player.getDisplayName(), player.getName(), location, Misc.string(player.getHealth()), ip, balance, Misc.string(plugin.getServer().getOnlinePlayers().length) }));
+		Plugin test = plugin.getServer().getPluginManager().getPlugin("iConomy");
+		if (test != null) {
+			Account pAct = iConomy.getBank().getAccount(player.getName());
+			if (pAct != null) {
+				balance = pAct + " " + iConomy.getBank().getCurrency();
+				for (String line : motd) {
+					Messaging.send(player, Messaging.argument(line, new String[] { "+dname,+d", "+name,+n", "+location,+l", "+health,+h", "+ip", "+balance", "+online" }, new String[] { player.getDisplayName(), player.getName(), location, Misc.string(player.getHealth()), ip, balance, Misc.string(plugin.getServer().getOnlinePlayers().length) }));
+				}
+			} else {
+			//	System.out.println("Account null, scheduling events");
+				plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable() {
+					public void run() {
+						plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+							public void run() {
+								PlayerChatEvent newEvent = new PlayerChatEvent(Type.PLAYER_CHAT, pp, "/motd");
+								onPlayerCommandPreprocess(newEvent);
+							}
+						});
+					}
+				}, 10);
+			}
+		} else {
+//System.out.println("iConomy is null when player joins");
+			for (String line : motd) {
+				Messaging.send(player, Messaging.argument(line, new String[] { "+dname,+d", "+name,+n", "+location,+l", "+health,+h", "+ip", "+balance", "+online" }, new String[] { player.getDisplayName(), player.getName(), location, Misc.string(player.getHealth()), ip, balance, Misc.string(plugin.getServer().getOnlinePlayers().length) }));
+			}
 		}
 	}
 
@@ -415,7 +415,7 @@ public class iListen extends PlayerListener {
 	 */
 	@Override
 	public void onPlayerCommandPreprocess(PlayerChatEvent event) {
-		
+
 		String[] split = event.getMessage().split(" ");
 		Player player = event.getPlayer();
 		World world = player.getWorld();
@@ -424,7 +424,7 @@ public class iListen extends PlayerListener {
 		String base = split[0];
 
 		if ((!event.isCancelled()) && (Misc.isEither(base, "/help", "/?") && doCmd(6)) || (Misc.is(base, "/ghelp")) && doCmd(4)) {
-			
+
 			int page = 0;
 
 			if (split.length >= 2) {
@@ -445,7 +445,7 @@ public class iListen extends PlayerListener {
 			if (!General.Permissions.getHandler().permission(player, "general.spawn.set")) {
 				return;
 			}
-			server.q.a((int) Math.ceil(player.getLocation().getX()), (int) Math.ceil(player.getLocation().getY()),(int) Math.ceil(player.getLocation().getZ()));
+			server.q.a((int) Math.ceil(player.getLocation().getX()), (int) Math.ceil(player.getLocation().getY()), (int) Math.ceil(player.getLocation().getZ()));
 			// server.m = (int)Math.ceil(player.getLocation().getX());
 			// server.o = (int)Math.ceil(player.getLocation().getZ());
 
@@ -478,19 +478,12 @@ public class iListen extends PlayerListener {
 
 			String location = (int) player.getLocation().getX() + "x, " + (int) player.getLocation().getY() + "y, " + (int) player.getLocation().getZ() + "z";
 			String ip = player.getAddress().getAddress().getHostAddress();
-			String balance = Double.toString(iConomy.getBank().getAccount(player.getName()).getBalance());
-			//Plugin test = plugin.getServer().getPluginManager().getPlugin("iConomy");
-			
-			
-			
-			// Plugin test =
-			// plugin.getServer().getPluginManager().getPlugin("iConomy");
+			String balance = "";
 
-			// if(test != null) {
-			// iConomy iConomy = (iConomy)test;
-			// balance = iConomy.db.get_balance(player.getName()) + " " +
-			// iConomy.currency;
-			// }
+			Plugin test = plugin.getServer().getPluginManager().getPlugin("iConomy");
+			if (test != null) {
+				balance = iConomy.getBank().getAccount(player.getName()) + " " + iConomy.getBank().getCurrency();
+			}
 
 			for (String line : motd) {
 				Messaging.send(player, Messaging.argument(line, new String[] { "+dname,+d", "+name,+n", "+location,+l", "+health,+h", "+ip", "+balance", "+online" }, new String[] { player.getDisplayName(), player.getName(), location, Misc.string(player.getHealth()), ip, balance, Misc.string(plugin.getServer().getOnlinePlayers().length) }));
