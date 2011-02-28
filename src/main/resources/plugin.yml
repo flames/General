@@ -9,3 +9,30 @@ commands:
     usage: |
            /<command>
            Example: /<command> - teleports you to the spawn point.
+  setspawn:
+    description: Changes the spawn point of your world.
+    usage: |
+           /<command>
+           Example: /<command> - Changes the spawn point of your world to your position.
+  time:
+    description: Changes time in your world.
+    usage: |
+           /<command> [day/night/timestamp]
+           Example: /<command> day - skips the time to morning.
+           Example: /<command> night - skips time to evening.
+           Example: /<command> timestamp - changes the time to specified raw timestamp (minecraft timestamp).
+  i:
+    description: Spawns items.
+    usage: |
+           /<command> [item-id/item-name{:item-data}]
+           Example: /<command> 35 - gives you wool.
+           Example: /<command> 35 64 - gives you a stack of wool.
+           Example: /<command> wool 64 - gives you also a stack of wool.
+           Example: /<command> wool:15 - gives you black wool.
+           Example: /<command> wool:15 64 - gives you a stack of black wool.
+           Example: /<command> playername wool:15 64 - gives another player a stack of black wool.
+  who:
+    description: Who is online.
+    usage: |
+           /<command>
+           Example: /<command> - who is online, lists all online players.
