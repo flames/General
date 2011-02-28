@@ -15,9 +15,12 @@ import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerListener;
 //import org.bukkit.plugin.Plugin;
 import org.bukkit.Location;
+import org.bukkit.command.Command;
+import org.bukkit.command.PluginCommandYamlParser;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 
 import com.nijikokun.bukkit.iConomy.iConomy;
 //import org.bukkit.plugin.Plugin;
@@ -64,9 +67,88 @@ public class iListen extends PlayerListener {
 	public static General plugin;
 	public WorldServer server;
 
+	//all commands checked for by general.
+	private String[] cmdArray = {"afk","away","compass","getpos","ghelp","give","help","i","item","motd","msg","online","playerlist","reloaditems","rlidb","s","setspawn","spawn","teleport","tell","time","tp","tphere","who"};
+	
+//	0	afk
+//	1	away
+//	2	compass
+//	3	getpos
+//	4	ghelp
+//	5	give
+//	6	help
+//	7	i
+//	8	item
+//	9	motd
+//	10	msg
+//	11	online
+//	12	playerlist
+//	13	reloaditems
+//	14	rlidb
+//	15	s
+//	16	setspawn
+//	17	spawn
+//	18	teleport
+//	19	tell
+//	20	time
+//	21	tp
+//	22	tphere
+//	23	who
+
+	
+
+	public static HashMap<Integer, String> cmds = new HashMap<Integer, String>();
+	
+	
+	
+	
 	public iListen(General instance) {
 		plugin = instance;
 	}
+	
+	
+	
+	
+	public void setupCmds() {
+		//input commands into hash table
+		for (String s : cmdArray) {
+			cmds.put(s.hashCode(), s);
+		}
+
+		Plugin[] pArray = plugin.getServer().getPluginManager().getPlugins();
+		for (Plugin p : pArray) {
+			if (p != null && p != this){
+                plugin.getServer().getPluginManager().enablePlugin(p);
+                if (p.getDescription().getCommands() != null) {
+                	List<Command> cList = PluginCommandYamlParser.parse(p);
+                	for (Command c : cList) {
+                		if (cmds.containsKey(c.getName().hashCode())) {
+                			if (cmds.get(c.getName().hashCode()).equals(c.getName())) {
+                				System.out.println("General is giving " + c.getName() + " to " + p.getDescription().getName());
+                				cmds.remove(c.getName().hashCode());
+                			}
+                			//compare command to hashtable with commands General uses...
+                			//command exists in general. Need to....
+                		}
+                		//System.out.println(c.getName());
+                	}
+                	//System.out.println(p.getDescription().getCommands().toString());
+                }
+			}
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
 
 	private Location spawn(Player player) {
 		// server.
@@ -281,9 +363,21 @@ public class iListen extends PlayerListener {
 			// General.log.info("Help command registry does not contain "+command_line+" to remove!");
 		}
 	}
+	
+	private boolean doCmd(int i) {
+		if (cmds.containsKey(cmdArray[i].hashCode())) {
+			return true;
+		}
+		return false;
+	}
 
 	@Override
 	public void onPlayerJoin(PlayerEvent event) {
+		
+		if (doCmd(9)) {
+			return;
+		}
+		
 		Player player = event.getPlayer();
 		String[] motd = readMotd();
 
@@ -320,7 +414,8 @@ public class iListen extends PlayerListener {
 	 *         false the command doesn't.
 	 */
 	@Override
-	public void onPlayerCommand(PlayerChatEvent event) {
+	public void onPlayerCommandPreprocess(PlayerChatEvent event) {
+		
 		String[] split = event.getMessage().split(" ");
 		Player player = event.getPlayer();
 		World world = player.getWorld();
@@ -328,7 +423,8 @@ public class iListen extends PlayerListener {
 		Messaging.save(player);
 		String base = split[0];
 
-		if ((!event.isCancelled()) && (Misc.isEither(base, "/help", "/?")) || (Misc.is(base, "/ghelp"))) {
+		if ((!event.isCancelled()) && (Misc.isEither(base, "/help", "/?") && doCmd(6)) || (Misc.is(base, "/ghelp")) && doCmd(4)) {
+			
 			int page = 0;
 
 			if (split.length >= 2) {
@@ -345,7 +441,7 @@ public class iListen extends PlayerListener {
 			event.setCancelled(true);
 		}
 
-		if ((!event.isCancelled()) && Misc.is(base, "/setspawn")) {
+		if ((!event.isCancelled()) && Misc.is(base, "/setspawn") && doCmd(16)) {
 			if (!General.Permissions.getHandler().permission(player, "general.spawn.set")) {
 				return;
 			}
@@ -356,7 +452,7 @@ public class iListen extends PlayerListener {
 			Messaging.send("&eSpawn position changed to where you are standing.");
 		}
 
-		if (Misc.isEither(base, "/rlidb", "/reloaditems")) {
+		if (Misc.isEither(base, "/rlidb", "/reloaditems") && doCmd(13)) {
 			if (!General.Permissions.getHandler().permission(player, "general.reloaditems")) {
 				return;
 			}
@@ -365,7 +461,7 @@ public class iListen extends PlayerListener {
 			Messaging.send("&eItems.db reloaded.");
 		}
 
-		if (Misc.is(base, "/spawn")) {
+		if (Misc.is(base, "/spawn") && doCmd(17)) {
 			if (!General.Permissions.getHandler().permission(player, "general.spawn")) {
 				return;
 			}
@@ -373,7 +469,7 @@ public class iListen extends PlayerListener {
 			player.teleportTo(spawn(player));
 		}
 
-		if ((!event.isCancelled()) && Misc.is(base, "/motd")) {
+		if ((!event.isCancelled()) && Misc.is(base, "/motd") && doCmd(9)) {
 			String[] motd = readMotd();
 
 			if (motd == null || motd.length < 1) {
@@ -401,7 +497,7 @@ public class iListen extends PlayerListener {
 			}
 		}
 
-		if (Misc.isEither(base, "/tp", "/teleport")) {
+		if ((Misc.is(base, "/tp") && doCmd(21)) || (Misc.is(base, "/teleport") && doCmd(18))) {
 			if (!General.Permissions.getHandler().permission(player, "general.teleport")) {
 				return;
 			}
@@ -440,7 +536,7 @@ public class iListen extends PlayerListener {
 			}
 		}
 
-		if (Misc.isEither(base, "/s", "/tphere")) {
+		if ((Misc.is(base, "/s") && doCmd(15)) || (Misc.is(base, "/tphere") && doCmd(22))) {
 			if (!General.Permissions.getHandler().permission(player, "general.teleport.here")) {
 				return;
 			}
@@ -465,7 +561,7 @@ public class iListen extends PlayerListener {
 			}
 		}
 
-		if ((!event.isCancelled()) && Misc.is(base, "/getpos")) {
+		if ((!event.isCancelled()) && Misc.is(base, "/getpos") && doCmd(3)) {
 			Messaging.send("Pos X: " + player.getLocation().getX() + " Y: " + player.getLocation().getY() + " Z: " + player.getLocation().getZ());
 			Messaging.send("Rotation: " + player.getLocation().getYaw() + " Pitch: " + player.getLocation().getPitch());
 
@@ -478,7 +574,7 @@ public class iListen extends PlayerListener {
 			Messaging.send("Compass: " + getDirection(degreeRotation) + " (" + (Math.round(degreeRotation * 10) / 10.0) + ")");
 		}
 
-		if (Misc.is(base, "/compass")) {
+		if (Misc.is(base, "/compass") && doCmd(2)) {
 			double degreeRotation = ((player.getLocation().getYaw() - 90) % 360);
 
 			if (degreeRotation < 0) {
@@ -488,7 +584,7 @@ public class iListen extends PlayerListener {
 			Messaging.send("&cCompass: " + getDirection(degreeRotation));
 		}
 
-		if (Misc.isEither(base, "/afk", "/away")) {
+		if ((Misc.is(base, "/afk") && doCmd(0)) || (Misc.is(base, "/away") && doCmd(1))) {
 			if ((AFK != null || !AFK.isEmpty()) && isAFK(player)) {
 				Messaging.send("&7You have been marked as back.");
 				unAFK(player);
@@ -504,7 +600,7 @@ public class iListen extends PlayerListener {
 			}
 		}
 
-		if (Misc.isEither(base, "/msg", "/tell")) {
+		if ((Misc.is(base, "/msg") && doCmd(10)) || (Misc.is(base, "/tell") && doCmd(19))) {
 			if (split.length < 3) {
 				Messaging.send("&cCorrect usage is: /msg [player] [message]");
 				event.setCancelled(true);
@@ -532,7 +628,7 @@ public class iListen extends PlayerListener {
 			}
 		}
 
-		if (Misc.isEither(base, "/i", "/give") || Misc.is(base, "/item")) {
+		if ((Misc.is(base, "/i") && doCmd(7)) || (Misc.is(base, "/give") && doCmd(5)) || (Misc.is(base, "/item") && doCmd(8))) {
 			if (!General.Permissions.getHandler().permission(player, "general.items")) {
 				return;
 			}
@@ -665,7 +761,7 @@ public class iListen extends PlayerListener {
 			event.setCancelled(true);
 		}
 
-		if (Misc.is(base, "/time")) {
+		if (Misc.is(base, "/time") && doCmd(20)) {
 			if (!General.Permissions.getHandler().permission(player, "general.time")) {
 				return;
 			}
@@ -733,7 +829,7 @@ public class iListen extends PlayerListener {
 			return;
 		}
 
-		if (Misc.isEither(base, "/playerlist", "/online") || Misc.is(base, "/who")) {
+		if ((Misc.is(base, "/playerlist") && doCmd(12)) || (Misc.is(base, "/online") && doCmd(11)) || (Misc.is(base, "/who") && doCmd(23))) {
 			if (split.length == 2) {
 				if (!General.Permissions.getHandler().permission(player, "general.player-info")) {
 					return;

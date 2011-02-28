@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+//import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 //import org.bukkit.Server;
@@ -22,6 +23,10 @@ import com.nijiko.cjcfork.General.DefaultConfiguration;
 //import com.nijiko.iConomy.configuration.PropertyHandler;
 import org.bukkit.plugin.Plugin;
 
+
+
+//import org.bukkit.command.Command;
+//import org.bukkit.command.PluginCommandYamlParser;
 
 
 /**
@@ -117,6 +122,7 @@ public class General extends JavaPlugin {
 
 	public void onEnable() {
 		version = this.getDescription().getVersion();
+		
 
 		this.getDataFolder().mkdirs();
 
@@ -148,10 +154,11 @@ public class General extends JavaPlugin {
 		setupCommands();
 		setupPermissions();
 		setupItems();
+		l.setupCmds();
 	}
 
 	private void registerEvents() {
-		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_COMMAND, l, Priority.Normal, this);
+		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_COMMAND_PREPROCESS, l, Priority.Normal, this);
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_JOIN, l, Priority.Normal, this);
 		
 		//iConomy 3.0
@@ -207,6 +214,7 @@ public class General extends JavaPlugin {
 			}
 		}
 	}
+
 
 	/**
 	 * Setup Items
