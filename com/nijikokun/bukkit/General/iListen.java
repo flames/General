@@ -10,12 +10,10 @@ import java.util.List;
 import java.util.logging.Logger;
 import net.minecraft.server.WorldServer;
 import org.bukkit.World;
-//import org.bukkit.event.Event;
 import org.bukkit.event.Event.Type;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerListener;
-//import org.bukkit.plugin.Plugin;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.PluginCommandYamlParser;
@@ -26,9 +24,6 @@ import org.bukkit.plugin.Plugin;
 
 import com.nijiko.coelho.iConomy.iConomy;
 import com.nijiko.coelho.iConomy.system.Account;
-//import org.bukkit.plugin.Plugin;
-//import org.bukkit.scheduler.BukkitScheduler;
-//import com.nijikokun.bukkit.iConomy.iConomy;
 
 /**
  * General 1.1 & Code from iConomy 2.x
@@ -112,7 +107,7 @@ public class iListen extends PlayerListener {
 
 		Plugin[] pArray = plugin.getServer().getPluginManager().getPlugins();
 		for (Plugin p : pArray) {
-			if (p != null && p != this) {
+			if (p != null && !p.getDescription().getName().equalsIgnoreCase("General")) {
 				plugin.getServer().getPluginManager().enablePlugin(p);
 				if (p.getDescription().getCommands() != null) {
 					List<Command> cList = PluginCommandYamlParser.parse(p);
@@ -135,17 +130,10 @@ public class iListen extends PlayerListener {
 	}
 
 	private Location spawn(Player player) {
-		// server.
-		// player.getWorld().getSpawnLocation().getBlockX()
-		double x = player.getWorld().getSpawnLocation().getX();// (server.m +
-																// 0.5D);
-		double y = player.getWorld().getSpawnLocation().getY();
-		double z = player.getWorld().getSpawnLocation().getZ();// server.o +
-																// 0.5D;
-		float rotX = 0.0F;
-		float rotY = 0.0F;
-
-		return new Location(player.getWorld(), x, y, z, rotX, rotY);
+		// lol, duh. Courtesy of browsing haruArc's (github commit
+		// 827cc074dc1c79486ead) General fork. Realized I had probably
+		// overcomplicated things. And I had.
+		return player.getWorld().getSpawnLocation();
 	}
 
 	public long getTime(Player player) {
@@ -383,7 +371,6 @@ public class iListen extends PlayerListener {
 					Messaging.send(player, Messaging.argument(line, new String[] { "+dname,+d", "+name,+n", "+location,+l", "+health,+h", "+ip", "+balance", "+online" }, new String[] { player.getDisplayName(), player.getName(), location, Misc.string(player.getHealth()), ip, balance, Misc.string(plugin.getServer().getOnlinePlayers().length) }));
 				}
 			} else {
-			//	System.out.println("Account null, scheduling events");
 				plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable() {
 					public void run() {
 						plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
@@ -396,7 +383,6 @@ public class iListen extends PlayerListener {
 				}, 10);
 			}
 		} else {
-//System.out.println("iConomy is null when player joins");
 			for (String line : motd) {
 				Messaging.send(player, Messaging.argument(line, new String[] { "+dname,+d", "+name,+n", "+location,+l", "+health,+h", "+ip", "+balance", "+online" }, new String[] { player.getDisplayName(), player.getName(), location, Misc.string(player.getHealth()), ip, balance, Misc.string(plugin.getServer().getOnlinePlayers().length) }));
 			}
@@ -446,8 +432,6 @@ public class iListen extends PlayerListener {
 				return;
 			}
 			server.q.a((int) Math.ceil(player.getLocation().getX()), (int) Math.ceil(player.getLocation().getY()), (int) Math.ceil(player.getLocation().getZ()));
-			// server.m = (int)Math.ceil(player.getLocation().getX());
-			// server.o = (int)Math.ceil(player.getLocation().getZ());
 
 			Messaging.send("&eSpawn position changed to where you are standing.");
 		}

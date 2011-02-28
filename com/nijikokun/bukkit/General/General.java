@@ -5,29 +5,20 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
-//import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-//import org.bukkit.Server;
+
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event;
-//import org.bukkit.event.server.PluginEvent;
-//import org.bukkit.event.server.ServerListener;
-//import org.bukkit.plugin.PluginDescriptionFile;
-//import org.bukkit.plugin.PluginLoader;
 import org.bukkit.plugin.java.JavaPlugin;
-import com.nijikokun.bukkit.Permissions.Permissions;
-import com.nijiko.cjcfork.General.ConfigurationHandler;
-import com.nijiko.cjcfork.General.DefaultConfiguration;
-
-//import com.nijiko.iConomy.configuration.PropertyHandler;
 import org.bukkit.plugin.Plugin;
+
+import com.nijikokun.bukkit.Permissions.Permissions;
+
 import com.nijiko.coelho.iConomy.iConomy;
 
-
-//import org.bukkit.command.Command;
-//import org.bukkit.command.PluginCommandYamlParser;
-
+import com.nijiko.cjcfork.General.ConfigurationHandler;
+import com.nijiko.cjcfork.General.DefaultConfiguration;
 
 /**
  * General 2.x Copyright (C) 2011 Nijikokun <nijikokun@gmail.com>
@@ -89,39 +80,11 @@ public class General extends JavaPlugin {
 	public static HashMap<String, String> items;
 	public static boolean health = true, coords = true, commands = true;
 
-	// public General(PluginLoader pluginLoader, Server instance,
-	// PluginDescriptionFile desc, File folder, File plugin, ClassLoader
-	// cLoader) {
-	// super(pluginLoader, instance, desc, folder, plugin, cLoader);
-	//
-	// // Start Registration
-	// folder.mkdirs();
-	//
-	// // Attempt
-	// if (!(new File(getDataFolder(), "config.yml").exists())) {
-	// DefaultConfiguration("config.yml");
-	// }
-	//
-	// // Gogo
-	// this.config = new ConfigurationHandler(getConfiguration());
-	// getConfiguration().load();
-	// this.config.load();
-	//
-	// // Register
-	// registerEvents();
-	//
-	// log.info(Messaging.bracketize(name) + " version " +
-	// Messaging.bracketize(version) + " (" + codename + ") loaded");
-	// }
-
 	public void onDisable() {
-		// log.info(Messaging.bracketize(name) + " version " +
-		// Messaging.bracketize(version) + " (" + codename + ") disabled");
 	}
 
 	public void onEnable() {
 		version = this.getDescription().getVersion();
-		
 
 		this.getDataFolder().mkdirs();
 
@@ -160,9 +123,6 @@ public class General extends JavaPlugin {
 	private void registerEvents() {
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_COMMAND_PREPROCESS, l, Priority.Normal, this);
 		getServer().getPluginManager().registerEvent(Event.Type.PLAYER_JOIN, l, Priority.Normal, this);
-		
-		//iConomy 3.0
-    //    this.getServer().getPluginManager().registerEvent(Event.Type.PLUGIN_ENABLE, Listener, Priority.Monitor, this);
 	}
 
 	public void setupCommands() {
@@ -196,9 +156,7 @@ public class General extends JavaPlugin {
 		}
 	}
 
-	
-	
-	
+		
 	//(one line of, didn't outright paste this time :P) new setupPermissions courtesy of Acru
 	//http://forums.bukkit.org/posts/79813/
 	public void setupPermissions() {
@@ -282,23 +240,4 @@ public class General extends JavaPlugin {
 			}
 		}
 	}
-	
-	
-
-//	private Listener Listener = new Listener();
-//
-//	private class Listener extends ServerListener {
-//
-//		public Listener() {
-//		}
-//
-//		@Override
-//		public void onPluginEnabled(PluginEvent event) {
-//			if (event.getPlugin().getDescription().getName().equals("iConomy")) {
-//				General.iConomy = (iConomy) event.getPlugin();
-//				log.info("[General] Attached to iConomy.");
-//			}
-//		}
-//	}
-
 }

@@ -246,8 +246,6 @@ public class Items {
 			return true;
 		}
 
-		// int itemId = -1;
-
 		if (id == 35 || id == 351 || id == 63) {
 			if (type >= 0 && type <= 15) {
 				return true;
